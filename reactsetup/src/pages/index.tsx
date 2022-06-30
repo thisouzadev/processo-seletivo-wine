@@ -2,6 +2,7 @@ import React from 'react'
 import Head from 'next/head'
 
 import { Container } from '../styles/pages/Home'
+import WineList from '../components/WineList'
 
 const Home: React.FC = () => {
   return (
@@ -11,7 +12,7 @@ const Home: React.FC = () => {
       </Head>
 
       <main>
-        <h1>hello world</h1>
+        <WineList />
       </main>
     </div>
   )
