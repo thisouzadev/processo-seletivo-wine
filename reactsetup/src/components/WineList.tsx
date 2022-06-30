@@ -38,6 +38,8 @@ const Footer = styled.div`
 
 const WineList: React.FC = () => {
   const [page, setPage] = useState(1);
+  const [price, setPrice] = useState(0);
+  const [search, setSearch] = useState("");
   const { data } = wineFetch<WineListProps[]>(`https://wine-back-test.herokuapp.com/products?page=${page}&limit=10`)
 
   const increment = () => {
@@ -67,9 +69,22 @@ const WineList: React.FC = () => {
     return <div>Loading...</div>
   }
 
+  const handleChange = (string) => {
+    setSearch(string);
+  };
+
+  const searchTask = () => data.items.filter((wine) => (
+    wine.name.toLowerCase().includes(search.toLowerCase())
+  ));
   return (
     <>
-      {data.items.map(wine => (
+    <main>
+        <div>
+          <input
+              onChange={ (event) => handleChange(event.target.value) }
+              type="text"
+              name="searchTask" />
+      {searchTask().map(wine => (
       <CardContainer key={wine.id}>
         <img src={wine.image} alt={wine.name} />
         <Separator />
@@ -84,6 +99,8 @@ const WineList: React.FC = () => {
         </div>
       </CardContainer>
       ))}
+        </div>
+    </main>
       <Footer>
             <button
               type="button"
