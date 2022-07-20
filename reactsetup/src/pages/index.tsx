@@ -10,12 +10,12 @@ const Home: React.FC = () => {
         <title>Homepage</title>
       </Head>
       <nav>
-      <Link href="/about/">
-	<a data-cy="nav-item">About</a>
-</Link>
-    </nav>
+        <Link href="/about/">
+          <a data-cy="nav-item">About</a>
+        </Link>
+      </nav>
       <main>
-      <h1>hello world</h1>
+        <h1>hello world</h1>
       </main>
     </Container>
   )
