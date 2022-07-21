@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable @next/next/google-font-display */
 import React from 'react'
 import Document, {
   DocumentInitialProps,
@@ -19,7 +21,8 @@ export default class MyDocument extends Document {
     try {
       ctx.renderPage = () =>
         originalRenderPage({
-          enhanceApp: App => props => sheet.collectStyles(<App {...props} />)
+          enhanceApp: (App) => (props) =>
+            sheet.collectStyles(<App {...props} />)
         })
 
       const initialProps = await Document.getInitialProps(ctx)
@@ -48,7 +51,10 @@ export default class MyDocument extends Document {
             rel="stylesheet"
           />
 
-          <link rel="icon" href="https://thumbs.dreamstime.com/z/untitled-human-brain-colorful-logo-142616936.jpg" />
+          <link
+            rel="icon"
+            href="https://thumbs.dreamstime.com/z/untitled-human-brain-colorful-logo-142616936.jpg"
+          />
         </Head>
         <body>
           <Main />

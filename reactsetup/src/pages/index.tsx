@@ -11,7 +11,9 @@ const Home: React.FC = () => {
       </Head>
       <nav>
         <Link href="/about/">
-          <a data-cy="nav-item">About</a>
+          <button className="link-button" data-cy="nav-item">
+            About
+          </button>
         </Link>
       </nav>
       <main>

@@ -17,7 +17,8 @@
         "next",
         "next/core-web-vitals",
         "prettier",
-        "prettier/prettier"
+        "prettier/prettier",
+        "plugin:styled-components-a11y/recommended"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -31,9 +32,11 @@
         "react",
         "@typescript-eslint",
         "prettier",
-        "react-hooks"
+        "react-hooks",
+        "styled-components-a11y"
     ],
     "rules": {
+        // "styled-components-a11y/rule-name": 2,
         "prettier/prettier": "error",
         "space-before-function-paren":"off",
         "react/prop-types": "off",
@@ -41,6 +44,21 @@
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "warn",
         "react/react-in-jsx-scope": "off",
-        "@typescript-eslint/explicit-module-boundary-types": "off"
+        // "@typescript-eslint/explicit-module-boundary-types": "off",
+        // "@typescript-eslint/no-explicit-any": "off",
+        // "@typescript-eslint/no-non-null-assertion": "off",
+        // "@typescript-eslint/no-unused-vars": "off",
+        // "@typescript-eslint/no-use-before-define": "off",
+        // "@typescript-eslint/no-var-requires": "off",
+        // "@typescript-eslint/no-empty-interface": "off",
+        // "@typescript-eslint/no-empty-function": "off",
+        "jsx-a11y/anchor-is-valid": [
+          "error",
+          {
+            "components": ["Link"],
+            "specialLink": ["hrefLeft", "hrefRight"],
+            "aspects": ["noHref", "invalidHref", "preferButton"]
+          }
+        ]
     }
 }
