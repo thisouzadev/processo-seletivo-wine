@@ -17,7 +17,7 @@ const Home: React.FC = () => {
         </Link>
       </nav>
       <main>
-        <h1>hello world</h1>
+        <h1>hello worldd</h1>
       </main>
     </Container>
   )
