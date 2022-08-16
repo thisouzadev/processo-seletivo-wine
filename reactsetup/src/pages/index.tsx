@@ -1,25 +1,22 @@
 import React from 'react'
 import Head from 'next/head'
-import { Container } from '../styles/pages/Home'
-import Link from 'next/link'
+import Header from '../components/Header'
+import Menu from '../components/Menu'
+import Loja from './loja'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 const Home: React.FC = () => {
   return (
-    <Container>
+    <div>
       <Head>
         <title>Homepage</title>
       </Head>
-      <nav>
-        <Link href="/about/">
-          <button className="link-button" data-cy="nav-item">
-            About
-          </button>
-        </Link>
-      </nav>
+      <Menu />
+      <Header />
       <main>
-        <h1>hello worldd</h1>
+        <Loja />
       </main>
-    </Container>
+    </div>
   )
 }
 

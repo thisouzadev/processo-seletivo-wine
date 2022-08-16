@@ -11,9 +11,10 @@ export default createGlobalStyle`
     color: ${(props) => props.theme.colors.text};
     font: 400 16px Roboto, sans-serif;
   }
-  .link-button {
+  nav button {
   background-color: transparent;
-  color: blueviolet;
+  color: #FF0000;
+  margin-left: 30px;
   border: none;
   cursor: pointer;
   text-decoration: underline;
