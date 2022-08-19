@@ -63,7 +63,12 @@ const Store: React.FC = () => {
     setLimit(i)
   }
 
-  if (error) return <h1>Error</h1>
+  if (error)
+    return (
+      <Container>
+        <h1>Error</h1>
+      </Container>
+    )
   if (!data) {
     return <Container>Loading...</Container>
   }
