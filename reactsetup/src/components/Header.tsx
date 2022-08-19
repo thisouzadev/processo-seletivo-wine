@@ -11,7 +11,21 @@ import { useAuth } from '../store/AuthContext'
 
 const { src, width, height, blur }: any = Cart
 const Header: React.FC = () => {
-  const { menuOpen, setMenuOpen } = useAuth()
+  const { menuOpen, setMenuOpen, setItems, itemsFilter, setTotalPages } =
+    useAuth()
+  const search = (e: any) => {
+    const { value } = e.target
+    if (value === '') {
+      setTotalPages(7)
+    }
+    if (value.length > 0) {
+      const filtered = itemsFilter.filter((item: any) => {
+        return item.name.toLowerCase().includes(value.toLowerCase())
+      })
+      setItems(filtered)
+      setTotalPages(1)
+    }
+  }
 
   return (
     <Topbar>
@@ -39,6 +53,7 @@ const Header: React.FC = () => {
           </div>
           <div className="right">
             <div>
+              <input type="text" onChange={(e) => search(e)} />
               <BuscaLupa />
             </div>
             <Perfil />

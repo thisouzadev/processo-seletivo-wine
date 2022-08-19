@@ -13,23 +13,38 @@ import useSWR from 'swr'
 import { Button, Card, Form } from 'react-bootstrap'
 
 const Store: React.FC = () => {
-  const { items, setItems, pageIndex, setPageIndex, limit, setLimit } =
-    useAuth()
+  const {
+    items,
+    setItems,
+    pageIndex,
+    setPageIndex,
+    limit,
+    setLimit,
+    setItemsFilter,
+    totalPages,
+    setTotalPages
+  } = useAuth()
   const [cnt, setCnt] = useState(10)
+
   const fetcher = (url) => axios.get(url).then((res) => res.data)
 
   const { data, error } = useSWR(
     `https://wine-back-test.herokuapp.com/products?page=${pageIndex}&limit=${limit}`,
     fetcher
   )
-  console.log(data)
+  const { data: data2 } = useSWR(
+    `https://wine-back-test.herokuapp.com/products`,
+    fetcher
+  )
 
   useEffect(() => {
-    if (data) {
+    if (data && data2) {
       setItems(data.items)
+      setItemsFilter(data2.items)
+      setTotalPages(data.totalPages)
     }
-  }, [data, setItems])
-  const array = Array.from(Array(data?.totalPages).keys(), (x) => x + 1)
+  }, [data, data2, setItems, setItemsFilter, pageIndex, setTotalPages])
+  const array = Array.from(Array(totalPages).keys(), (x) => x + 1)
 
   const incrementPage = (e) => {
     e.preventDefault()
@@ -39,11 +54,9 @@ const Store: React.FC = () => {
     e.preventDefault()
     setPageIndex(pageIndex - 1)
   }
-  const handleLimit = (e) => {
+  const selectPage = (item, e) => {
     e.preventDefault()
-    for (let i = 9; i < cnt; i++) {
-      setLimit(e.target.value)
-    }
+    setPageIndex(item)
   }
 
   for (let i = 9; i < cnt; i += 9) {
@@ -54,6 +67,60 @@ const Store: React.FC = () => {
   if (!data) {
     return <Container>Loading...</Container>
   }
+  const PriceFilter = (e) => {
+    switch (e.target.value) {
+      case 'Até R$40':
+        e.preventDefault()
+        setItems(
+          data2.items.filter((item: any) => {
+            return item.price <= 40
+          })
+        )
+        setPageIndex(1)
+        setLimit(items.length)
+        break
+      case 'R$40 A R$60':
+        e.preventDefault()
+        setItems(
+          data2.items.filter((item: any) => {
+            return item.price > 40 && item.price <= 60
+          })
+        )
+        setPageIndex(1)
+        break
+      case 'R$100 A R$200':
+        e.preventDefault()
+        setItems(
+          data2.items.filter((item: any) => {
+            return item.price > 100 && item.price <= 200
+          })
+        )
+        setPageIndex(1)
+        setLimit(items.length)
+        break
+      case 'R$200 A R$500':
+        e.preventDefault()
+        setItems(
+          data2.items.filter((item) => item.price > 200 && item.price <= 500)
+        )
+        setPageIndex(1)
+        setLimit(items.length)
+        break
+      case 'Acima de R$500':
+        e.preventDefault()
+        setItems(data2.items.filter((item) => item.price > 500))
+        setPageIndex(1)
+        setLimit(items.length)
+        break
+      default:
+        setItems(data.items)
+        setPageIndex(1)
+        setLimit(9)
+        break
+    }
+  }
+  console.log(items, 'items')
+  console.log(data, 'data')
 
   return (
     <>
@@ -64,19 +131,49 @@ const Store: React.FC = () => {
             <h1>Refine sua busca</h1>
             <p>Por preço</p>
             <Form.Group>
-              <Form.Check name="group1" label="Até R$40" type="radio" />
+              <Form.Check
+                onChange={(event) => PriceFilter(event)}
+                value={'Até R$40'}
+                name="group1"
+                label="Até R$40"
+                type="radio"
+              />
             </Form.Group>
             <Form.Group>
-              <Form.Check name="group1" label="R$40 A R$60" type="radio" />
+              <Form.Check
+                onChange={(event) => PriceFilter(event)}
+                value={'R$40 A R$60'}
+                name="group1"
+                label="R$40 A R$60"
+                type="radio"
+              />
             </Form.Group>
             <Form.Group>
-              <Form.Check name="group1" label="R$100 A R$200" type="radio" />
+              <Form.Check
+                onChange={(event) => PriceFilter(event)}
+                value={'R$100 A R$200'}
+                name="group1"
+                label="R$100 A R$200"
+                type="radio"
+              />
             </Form.Group>
             <Form.Group>
-              <Form.Check name="group1" label="R$200 A R$500" type="radio" />
+              <Form.Check
+                onChange={(event) => PriceFilter(event)}
+                value={'R$200 A R$500'}
+                name="group1"
+                label="R$200 A R$500"
+                type="radio"
+              />
             </Form.Group>
             <Form.Group>
-              <Form.Check name="group1" label="Acime de R$500" type="radio" />
+              <Form.Check
+                onChange={(event) => PriceFilter(event)}
+                value={'Acima de R$500'}
+                name="group1"
+                label="Acima de R$500"
+                type="radio"
+              />
             </Form.Group>
           </Form>
         </ContainerLeft>
@@ -90,7 +187,7 @@ const Store: React.FC = () => {
                   key={index}
                   style={{ display: 'flex', flexDirection: 'column' }}
                 >
-                  <Card style={{ width: '18rem', marginBottom: '20px' }}>
+                  <Card style={{ width: '14rem', marginBottom: '20px' }}>
                     <Card.Img src={item.image} alt={item.name} />
                     <Card.Body>
                       <Card.Title>{item.name}</Card.Title>
@@ -137,22 +234,22 @@ const Store: React.FC = () => {
           return (
             <Button
               key={index}
-              style={{ display: pageIndex === item && 'none' }}
+              style={{ display: data?.totalPages === 1 && 'none' }}
               variant={pageIndex === item ? 'primary' : 'outline-primary'}
-              onClick={(e) => setPageIndex(item)}
+              onClick={(e) => selectPage(item, e)}
             >
               {item}
             </Button>
           )
         })}
         <Button
-          style={{ display: pageIndex === data.totalPages && 'none' }}
+          style={{ display: pageIndex === totalPages && 'none' }}
           onClick={(e) => incrementPage(e)}
         >
           Próximo
         </Button>
         <Button
-          style={{ display: pageIndex === data.totalPages && 'none' }}
+          style={{ display: pageIndex === totalPages && 'none' }}
           onClick={() => setCnt(cnt + 10)}
         >
           Mostrar mais
