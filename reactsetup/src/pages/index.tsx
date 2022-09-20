@@ -8,10 +8,12 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 const Home: React.FC = () => {
   return (
     <div>
-      <Head>
-        <title>Homepage</title>
-      </Head>
-      <Menu />
+      <div>
+        <Head>
+          <title>Wine Thiago</title>
+        </Head>
+        <Menu />
+      </div>
       <Header />
       <main>
         <Loja />

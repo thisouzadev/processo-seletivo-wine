@@ -1,6 +1,8 @@
 import { createContext, useContext, ReactNode, useState } from 'react'
 
 type authContextType = {
+  showModal: boolean
+  setShowModal: (showModal: boolean) => void
   menuOpen: boolean
   setMenuOpen: (menuOpen: boolean) => void
   setItems: (items: any) => void
@@ -12,12 +14,12 @@ type authContextType = {
   limit: number
   items: [
     {
+      id: number
       avaliations: number
       classification: string
       country: string
       discount: number
       flag: string
-      id: number
       image: string
       name: string
       price: number
@@ -38,16 +40,18 @@ type authContextType = {
 }
 
 const authContextDefaultValues: authContextType = {
+  showModal: false,
+  setShowModal: (showModal: boolean) => {},
   setTotalPages: (totalPages: number) => {},
   menuOpen: false,
   itemsFilter: [
     {
+      id: 0,
       avaliations: 0,
       classification: '',
       country: '',
       discount: 0,
       flag: '',
-      id: 0,
       image: '',
       name: '',
       price: 0,
@@ -145,6 +149,8 @@ export function AuthProvider({ children }: Props) {
       type: ''
     }
   ])
+  const [showModal, setShowModal] =
+    useState<authContextType['showModal']>(false)
   const [itemsPerPage, setItemsPerPage] =
     useState<authContextType['itemsPerPage']>(0)
   const [page, setPage] = useState<authContextType['page']>(0)
@@ -153,6 +159,7 @@ export function AuthProvider({ children }: Props) {
   const [limit, setLimit] = useState<authContextType['limit']>(9)
   const [getData, setGetData] = useState<any>([])
   const [totalPages, setTotalPages] = useState<authContextType['totalPages']>(7)
+
   const value = {
     menuOpen,
     setMenuOpen,
@@ -173,7 +180,9 @@ export function AuthProvider({ children }: Props) {
     getData,
     setGetData,
     totalPages,
-    setTotalPages
+    setTotalPages,
+    showModal,
+    setShowModal
   }
 
   return (

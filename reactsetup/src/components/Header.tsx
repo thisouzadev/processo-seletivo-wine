@@ -6,24 +6,38 @@ import Perfil from '../assets/perfil.svg'
 import Image from 'next/image'
 import Cart from '../../public/bitmap.png'
 
-import { Topbar } from '../styles/pages/Header'
+import {
+  DivCountStyles,
+  SectionCartStyles,
+  Topbar
+} from '../styles/pages/Header'
 import { useAuth } from '../store/AuthContext'
+import { Form, InputGroup } from 'react-bootstrap'
 
 const { src, width, height, blur }: any = Cart
 const Header: React.FC = () => {
-  const { menuOpen, setMenuOpen, setItems, itemsFilter, setTotalPages } =
-    useAuth()
+  const {
+    menuOpen,
+    setMenuOpen,
+    setItems,
+    itemsFilter,
+    setTotalPages,
+    items,
+    setLimit
+  } = useAuth()
   const search = (e: any) => {
     const { value } = e.target
     if (value === '') {
       setTotalPages(7)
+      setLimit(items.length)
     }
     if (value.length > 0) {
       const filtered = itemsFilter.filter((item: any) => {
         return item.name.toLowerCase().includes(value.toLowerCase())
       })
-      setItems(filtered)
       setTotalPages(1)
+      setItems(filtered)
+      setLimit(items.length)
     }
   }
 
@@ -53,18 +67,26 @@ const Header: React.FC = () => {
           </div>
           <div className="right">
             <div>
-              <input type="text" onChange={(e) => search(e)} />
+              <input
+                placeholder="search"
+                type="text"
+                onChange={(e) => search(e)}
+              />
+
               <BuscaLupa />
             </div>
             <Perfil />
             <div className="sideBar">
-              <Image
-                onClick={() => setMenuOpen(!menuOpen)}
-                src={src}
-                width={width}
-                height={height}
-                placeholder={blur}
-              />
+              <SectionCartStyles>
+                <Image
+                  onClick={() => setMenuOpen(!menuOpen)}
+                  src={src}
+                  width={width}
+                  height={height}
+                  placeholder={blur}
+                />
+                <DivCountStyles>1</DivCountStyles>
+              </SectionCartStyles>
             </div>
           </div>
         </div>

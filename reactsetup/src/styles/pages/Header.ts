@@ -2,6 +2,7 @@ import styled from 'styled-components'
 
 export const Topbar = styled.div`
   .topbar {
+    margin-bottom: 70px;
     width: 100%;
     height: 70px;
     background-color: white;
@@ -75,4 +76,41 @@ export const Topbar = styled.div`
       }
     }
   }
+`
+export const SectionCartStyles = styled.section`
+  cursor: pointer;
+  background-color: #f9b950;
+  min-width: 60px;
+  min-height: 60px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 0;
+  img {
+    border-radius: 0 0 16% 16%;
+  }
+  :hover {
+    color: blue;
+    transform: scale(1.1);
+  }
+`
+
+export const DivCountStyles = styled.div`
+  position: absolute;
+  left: 64.29%;
+  right: 0%;
+  top: 65.5%;
+  bottom: 0%;
+  background: #ffffff;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  text-align: center;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  border-radius: 150%;
+  font-weight: bolder;
+  color: #4fbfa5;
 `

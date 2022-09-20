@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import { useAuth } from '../store/AuthContext'
 import axios from 'axios'
+import Utils from '../utils/functions/index'
 
 import {
   Container,
@@ -11,6 +12,7 @@ import {
 } from '../styles/pages/Container'
 import useSWR from 'swr'
 import { Button, Card, Form } from 'react-bootstrap'
+import ProductDetails from '../components/ProductDetails'
 
 const Store: React.FC = () => {
   const {
@@ -22,10 +24,11 @@ const Store: React.FC = () => {
     setLimit,
     setItemsFilter,
     totalPages,
-    setTotalPages
+    setTotalPages,
+    setShowModal,
+    setMenuOpen
   } = useAuth()
   const [cnt, setCnt] = useState(10)
-
   const fetcher = (url) => axios.get(url).then((res) => res.data)
 
   const { data, error } = useSWR(
@@ -62,6 +65,30 @@ const Store: React.FC = () => {
   for (let i = 9; i < cnt; i += 9) {
     setLimit(i)
   }
+  const setCart = (item, event) => {
+    event.preventDefault()
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('detalhes', JSON.stringify(item))
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]')
+      const getItem = cart.find((product: any) => item.id === product.id)
+      if (getItem) {
+        const newCart = cart
+          .map((product: any) => {
+            if (product.id === item.id) {
+              product.quantity += 1
+            }
+            return product
+          })
+          .filter((product: any) => product.quantity > 0)
+        localStorage.setItem('cart', JSON.stringify(newCart))
+      } else {
+        const newCart = [...cart, { ...item, quantity: 1 }]
+        localStorage.setItem('cart', JSON.stringify(newCart))
+      }
+    }
+    setShowModal(true)
+    setMenuOpen(false)
+  }
 
   if (error)
     return (
@@ -81,7 +108,7 @@ const Store: React.FC = () => {
             return item.price <= 40
           })
         )
-        setPageIndex(1)
+        setTotalPages(1)
         setLimit(items.length)
         break
       case 'R$40 A R$60':
@@ -91,7 +118,7 @@ const Store: React.FC = () => {
             return item.price > 40 && item.price <= 60
           })
         )
-        setPageIndex(1)
+        setTotalPages(1)
         break
       case 'R$100 A R$200':
         e.preventDefault()
@@ -100,7 +127,7 @@ const Store: React.FC = () => {
             return item.price > 100 && item.price <= 200
           })
         )
-        setPageIndex(1)
+        setTotalPages(1)
         setLimit(items.length)
         break
       case 'R$200 A R$500':
@@ -108,24 +135,24 @@ const Store: React.FC = () => {
         setItems(
           data2.items.filter((item) => item.price > 200 && item.price <= 500)
         )
-        setPageIndex(1)
+        setTotalPages(1)
         setLimit(items.length)
         break
       case 'Acima de R$500':
         e.preventDefault()
         setItems(data2.items.filter((item) => item.price > 500))
-        setPageIndex(1)
+        setTotalPages(1)
         setLimit(items.length)
         break
       default:
         setItems(data.items)
-        setPageIndex(1)
+        setTotalPages(7)
         setLimit(9)
         break
     }
   }
-  console.log(items, 'items')
-  console.log(data, 'data')
+  // console.log(items, 'items')
+  // console.log(data, 'data')
 
   return (
     <>
@@ -219,6 +246,7 @@ const Store: React.FC = () => {
                   <Button
                     variant="outline-success"
                     style={{ marginBottom: '30px' }}
+                    onClick={(event) => setCart(item, event)}
                   >
                     ADICIONAR
                   </Button>
@@ -260,6 +288,7 @@ const Store: React.FC = () => {
           Mostrar mais
         </Button>
       </ContainerCenter>
+      <ProductDetails />
     </>
   )
 }
